@@ -1,6 +1,7 @@
-package restaurant;
+package Restaurant;
 
 import Tools.Init;
+import Tools.Reservation;
 import Tools.Restaurant;
 import jade.core.AID;
 import jade.core.Agent;
@@ -30,7 +31,7 @@ public class AgentRestaurant extends Agent {
                 if (reservationMsg != null) {
                     try {
                         // Get content of reservationMsg (id of restaurant)
-                        int restaurantId = (int) reservationMsg.getContentObject();
+                        int restaurantId = ((Reservation)reservationMsg.getContentObject()).getId_Restaurant();
                         // build response msg
                         ACLMessage responseMsg = new ACLMessage(ACLMessage.INFORM);
                         responseMsg.addReceiver(new AID("Broker", AID.ISLOCALNAME));

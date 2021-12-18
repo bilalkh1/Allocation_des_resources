@@ -1,5 +1,6 @@
 package Broker;
 
+import Tools.Reservation;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -29,26 +30,26 @@ public class BrokerAgent extends Agent {
             public void action() {
 
                 // prepare for recieve messages
-                MessageTemplate mt1 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("Ready to"));
+                MessageTemplate mt1 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("Reservation"));
 
                 // recieve messages from other agents
                 ACLMessage reponse1 = receive(mt1);
 
-                MessageTemplate mt2 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchOntology("Calcul du chemin optimal"));
+                MessageTemplate mt2 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM), MessageTemplate.MatchOntology("Availability"));
                 ACLMessage reponse2 = receive(mt2);
 
                 if(reponse1 != null){
                     try{
-                        //On r�cup�re le contenu de reponse1 (ACLMessage)
-                        List villes = (List)reponse1.getContentObject();
+                        // we will get the content of the responce
+                        Reservation reservation = (Reservation)reponse1.getContentObject();
 
                         ACLMessage reponse3 = new ACLMessage(ACLMessage.REQUEST);
 
                         //Modification des param�tres de la requete ACLMessage
-                        reponse3.addReceiver(new AID("calculateur", AID.ISLOCALNAME));
+                        reponse3.addReceiver(new AID("Restaurant", AID.ISLOCALNAME));
                         //On met la liste des ville dans le message
-                        reponse3.setContentObject((Serializable) villes);
-                        reponse3.setOntology("Calcul");
+                        reponse3.setContentObject((Serializable) reservation);
+                        reponse3.setOntology("Reservation");
                         //Envoi de message
                         send(reponse3);
                     } catch (UnreadableException e) {
@@ -60,15 +61,15 @@ public class BrokerAgent extends Agent {
                 else if(reponse2 != null){
                     try {
 
-                        List[] villesOrdonnees = (List[]) reponse2.getContentObject();
+                        Boolean rep = (Boolean) reponse2.getContentObject();
 
                         ACLMessage reponse3 = new ACLMessage(ACLMessage.INFORM);
 
                         //Modification des param�tres de la requete ACLMessage
-                        reponse3.addReceiver(new AID("Voyageur", AID.ISLOCALNAME));
+                        reponse3.addReceiver(new AID("Person", AID.ISLOCALNAME));
                         //On met le tableau des villes ordonn�es dans le message
-                        reponse3.setContentObject((Serializable) villesOrdonnees);
-                        reponse3.setOntology("Tableau des villes ordonnees");
+                        reponse3.setContentObject(rep);
+                        reponse3.setOntology("check");
                         //Envoi de message
                         send(reponse3);
 

@@ -48,7 +48,7 @@ public class AgentPerson extends GuiAgent {
                             send(aclMessage);
 
                             MessageTemplate message1 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
-                                    MessageTemplate.MatchOntology("Reservation"));
+                                    MessageTemplate.MatchOntology("check"));
                             ACLMessage acl1 = receive(message1);
                             success = (Boolean) acl1.getContentObject();
 
