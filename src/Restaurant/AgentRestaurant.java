@@ -1,4 +1,4 @@
-package Restaurant;
+package restaurant;
 
 import Tools.Init;
 import Tools.Restaurant;

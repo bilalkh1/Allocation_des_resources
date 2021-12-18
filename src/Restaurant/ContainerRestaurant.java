@@ -1,4 +1,4 @@
-package Restaurant;
+package restaurant;
 
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
