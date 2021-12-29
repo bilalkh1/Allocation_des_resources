@@ -85,25 +85,26 @@ public class AgentRestaurant extends Agent {
                 if (reservationMsg != null) {
                     try {
                         // Get content of reservationMsg (id of restaurant)
-                        int restaurantId = ((Reservation)reservationMsg.getContentObject()).getId_Restaurant();
+                        int restaurantId = ((Reservation)reservationMsg.getContentObject()).getId_Restaurant() - 1;
                         // build response msg
                         ACLMessage responseMsg = new ACLMessage(ACLMessage.INFORM);
                         responseMsg.addReceiver(new AID("Broker", AID.ISLOCALNAME));
                         responseMsg.setOntology("Availability");
                         // check availability of this restaurant
-                        if (restaurants.get(restaurantId -1).getNbrPlaceEmpty() > 0) {
+                        if (restaurants.get(restaurantId).getNbrPlaceEmpty() > 0) {
                             // place available
-                            restaurants.get(restaurantId -1).nbrPlaceEmpty--;
+                            restaurants.get(restaurantId).nbrPlaceEmpty--;
                             responseMsg.setContentObject(true);
                             // send response
                             send(responseMsg);
+                            System.out.println("success");
                         } else {
                             // fully booked
                             responseMsg.setContentObject(false);
                             // send response
                             send(responseMsg);
+                            System.out.println("failiaure");
                         }
-                        System.out.println(restaurants);
                     } catch (Exception e) {
                         System.out.println(e);
                     }

@@ -84,7 +84,10 @@ public class AgentPerson extends GuiAgent {
                                             answer[0] = false;
                                         }
 
-                                    }else block();
+                                    }else {
+                                        System.out.println("noooooooooooo");
+                                        block();
+                                    }
 
                             } catch (Exception ex) {
                                 System.out.println(ex);
