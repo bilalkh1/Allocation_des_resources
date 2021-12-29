@@ -18,4 +18,8 @@ public class Reservation implements Serializable {
     public int getId_Restaurant() {
         return id_Restaurant;
     }
+
+    public String toString(){
+        return "Reservation : " + this.id_Restaurant;
+    }
 }

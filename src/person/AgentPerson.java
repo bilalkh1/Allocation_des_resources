@@ -29,11 +29,11 @@ public class AgentPerson extends GuiAgent {
     protected void setup() {
         ParallelBehaviour parallelBehaviour = new ParallelBehaviour();
         addBehaviour(parallelBehaviour);
-
+        final Boolean[] answer = {false};
         parallelBehaviour.addSubBehaviour(new CyclicBehaviour() {
             @Override
             public void action() {
-                Boolean answer = false;
+
                 MessageTemplate msg1 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
                         MessageTemplate.MatchOntology("InformationR"));
                 ACLMessage acl_1 = receive(msg1);
@@ -63,14 +63,14 @@ public class AgentPerson extends GuiAgent {
                         while(!success) {
 
                             try {
-                                    if(!answer) {
+                                    if(!answer[0]) {
                                         // Setup ACL Message object
                                         ACLMessage aclMessage = new ACLMessage(ACLMessage.REQUEST);
                                         aclMessage.addReceiver(new AID("Broker", AID.ISLOCALNAME));
                                         aclMessage.setOntology("Reservation");
                                         aclMessage.setContentObject((Serializable) new Reservation((int) (Math.random() * (11 - 6 + 1) + 6), new Date()));
                                         send(aclMessage);
-                                        answer = true;
+                                        answer[0] = true;
                                     }
 
 
@@ -78,9 +78,12 @@ public class AgentPerson extends GuiAgent {
                                     MessageTemplate.MatchOntology("check"));
                                     ACLMessage acl1 = receive(message1);
                                     if(acl1 != null){
-                                        success = (Boolean) acl1.getContentObject();
-                                        System.out.println(success);
-                                        answer = false;
+                                        if(answer[0]){
+                                            success = (Boolean) acl1.getContentObject();
+                                            System.out.println(success);
+                                            answer[0] = false;
+                                        }
+
                                     }else block();
 
                             } catch (Exception ex) {

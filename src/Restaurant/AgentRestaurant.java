@@ -45,23 +45,27 @@ public class AgentRestaurant extends Agent {
         System.out.println("setup of AgentRestaurant");
         ParallelBehaviour parallelBehaviour = new ParallelBehaviour();
         addBehaviour(parallelBehaviour);
+        final Boolean[] start = {true};
         parallelBehaviour.addSubBehaviour(new CyclicBehaviour() {
 
             @Override
             public void action() {
+
                 try {
                     TimeUnit.SECONDS.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 try {
-
+                    if(start[0]){
                         ACLMessage inf = new ACLMessage(ACLMessage.INFORM);
                         inf.addReceiver(new AID("Broker", AID.ISLOCALNAME));
                         inf.setOntology("Information");
                         inf.setContentObject(var);
                         System.out.println(var.M + " " + var.C);
                         send(inf);
+                        start[0] = false ;
+                        }
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -74,7 +78,7 @@ public class AgentRestaurant extends Agent {
                 ACLMessage reservationMsg = receive(msg1);
                 try {
                     if(reservationMsg !=null)
-                        System.out.println(reservationMsg.getContentObject().toString());
+                        System.out.println((Serializable) reservationMsg.getContentObject().toString());
                 } catch (UnreadableException e) {
                     e.printStackTrace();
                 }
