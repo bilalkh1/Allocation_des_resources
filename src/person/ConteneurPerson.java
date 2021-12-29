@@ -19,7 +19,7 @@ public class ConteneurPerson {
             //On Cr�e un conteneur p�riph�rique JADE
             AgentContainer agentContainer = runtime.createAgentContainer(profileImpl);
             //On cr�� l'instance de l'agent
-            AgentController agentController = agentContainer.createNewAgent("Voyageur", AgentPerson.class.getName(), new Object[]{});
+            AgentController agentController = agentContainer.createNewAgent("Person", AgentPerson.class.getName(), new Object[]{});
 
             //D�marr� l'instance de l'agent
             agentController.start();

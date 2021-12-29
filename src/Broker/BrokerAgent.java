@@ -1,5 +1,6 @@
 package Broker;
 
+import Tools.Init;
 import Tools.Reservation;
 import jade.core.AID;
 import jade.core.Agent;
@@ -23,11 +24,49 @@ public class BrokerAgent extends Agent {
         ParallelBehaviour comportementparallele = new ParallelBehaviour();
         // add the soub behaviour
         addBehaviour(comportementparallele);
+
+
+
         // add behaviour for messages
         comportementparallele.addSubBehaviour(new CyclicBehaviour() {
 
             @Override
             public void action() {
+
+                MessageTemplate init_1 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                        MessageTemplate.MatchOntology("Information"));
+                ACLMessage acl_1 = receive(init_1);
+                System.out.println("--------");
+                if(acl_1 != null){
+                    System.out.println("///////");
+                    try {
+                            Init r = (Init) acl_1.getContentObject();
+                            System.out.println(r.M + " " + r.C);
+                            ACLMessage inf = new ACLMessage(ACLMessage.INFORM);
+                            inf.addReceiver(new AID("Person", AID.ISLOCALNAME));
+                            inf.setContentObject(r);
+                            inf.setOntology("InformationR");
+                            send(inf);
+                            acl_1.clearAllReceiver();
+                        } catch (UnreadableException e) {
+                            e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+//                    ACLMessage inf = new ACLMessage(ACLMessage.INFORM);
+//                    inf.addReceiver(new AID("Person", AID.ISLOCALNAME));
+//                    inf.setOntology("Information_1");
+//                    try {
+//                        Init r = (Init) acl_1.getContentObject();
+//                        System.out.println(r.M + " " + r.C);
+//                    } catch (UnreadableException e) {
+//                        e.printStackTrace();
+//                    }
+//                    send(acl_1);
+//                    acl_1.setContent(null);
+
+                }
+
 
                 // prepare for recieve messages
                 MessageTemplate mt1 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST), MessageTemplate.MatchOntology("Reservation"));
@@ -49,12 +88,10 @@ public class BrokerAgent extends Agent {
                         reponse3.addReceiver(new AID("Restaurant", AID.ISLOCALNAME));
                         //On met la liste des ville dans le message
                         reponse3.setContentObject((Serializable) reservation);
-                        reponse3.setOntology("Reservation");
+                        reponse3.setOntology("ReservationM");
                         //Envoi de message
                         send(reponse3);
-                    } catch (UnreadableException e) {
-                        e.printStackTrace();
-                    }catch (IOException e) {
+                    } catch (UnreadableException | IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -73,9 +110,19 @@ public class BrokerAgent extends Agent {
                         //Envoi de message
                         send(reponse3);
 
-                    } catch (UnreadableException e) {
+                    } catch (UnreadableException | IOException e) {
                         e.printStackTrace();
-                    } catch (IOException e) {
+                    }
+                } else if(acl_1 != null){
+                    try {
+                        ACLMessage inf = new ACLMessage(ACLMessage.INFORM);
+                        inf.addReceiver(new AID("Person", AID.ISLOCALNAME));
+                        inf.setOntology("Information_1");
+                        Init r = (Init) acl_1.getContentObject();
+                        System.out.println(r.M + " " + r.C);
+
+                        send(acl_1);
+                    } catch (UnreadableException e) {
                         e.printStackTrace();
                     }
                 }

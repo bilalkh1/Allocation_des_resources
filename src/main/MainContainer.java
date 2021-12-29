@@ -1,5 +1,6 @@
 package main;
 
+import Tools.Init;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -10,6 +11,8 @@ import jade.wrapper.AgentContainer;
 public class MainContainer {
     public static void main(String[] args) {
         try {
+            //new Init();
+            //System.out.println(Init.restaurants);
             // create container agent
             Runtime runtime = Runtime.instance();
             Properties properties = new ExtendedProperties();
