@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AgentPerson extends GuiAgent {
-    int m = 8;
     List<Person> personList = new ArrayList<Person>();
     Boolean success = false;
     public static Init variables;
@@ -68,32 +67,38 @@ public class AgentPerson extends GuiAgent {
                                         ACLMessage aclMessage = new ACLMessage(ACLMessage.REQUEST);
                                         aclMessage.addReceiver(new AID("Broker", AID.ISLOCALNAME));
                                         aclMessage.setOntology("Reservation");
-                                        aclMessage.setContentObject((Serializable) new Reservation((int) (Math.random() * (11 - 6 + 1) + 6), new Date()));
+                                        aclMessage.setContentObject((Serializable) new Reservation((int) (Math.random() * (variables.M-1+1)+1), new Date()));
                                         send(aclMessage);
                                         answer[0] = true;
                                     }
 
+                                System.out.println("-------");
 
-                                    MessageTemplate message1 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+                                    MessageTemplate message1 = MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
                                     MessageTemplate.MatchOntology("check"));
                                     ACLMessage acl1 = receive(message1);
+                                System.out.println(acl1);
                                     if(acl1 != null){
-                                        if(answer[0]){
-                                            success = (Boolean) acl1.getContentObject();
-                                            System.out.println(success);
-                                            answer[0] = false;
-                                        }
+                                        success = (Boolean) acl1.getContentObject();
+                                        System.out.println(success);
+                                        answer[0] = false;
 
                                     }else {
                                         System.out.println("noooooooooooo");
-                                        block();
+                                        try {
+                                            TimeUnit.SECONDS.sleep(3);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+//                                        block();
                                     }
 
                             } catch (Exception ex) {
                                 System.out.println(ex);
                             }
                         }
-                        System.out.println("Person " + i + " successfully reserved the restaurant");
+                        System.out.println("Person " + (i + 1) + " successfully reserved the restaurant");
+                        success = !success;
                     }
                 }
 
